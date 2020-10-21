@@ -147,7 +147,7 @@ Next we bring in the actual tasks. The REST API of QRadar is desgined in a way t
   tasks:
     - name: get info about qradar rule
       qradar_rule_info:
-        name: "DDoS Attack Detected"
+        name: "Potential DDoS Against Single Host (TCP)"
 ```
 
 This module returns a lot of information, among those the ID we need to actually disable the role. Let's register the returned information into a variable with the help of the `register` keyword. It is directly used with the module itself. This enables us to use the content of the variable in the next task.
@@ -162,7 +162,7 @@ This module returns a lot of information, among those the ID we need to actually
   tasks:
     - name: get info about qradar rule
       qradar_rule_info:
-        name: "DDoS Attack Detected"
+        name: "Potential DDoS Against Single Host (TCP)"
       register: rule_info
 ```
 
