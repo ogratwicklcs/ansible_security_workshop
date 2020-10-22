@@ -10,10 +10,6 @@ The SIEM can be accessed via web UI and via REST API. In this lab the playbooks 
 
 Have a first look at the SIEM, and verify that it is actually working. Point your web browser towards `https://<qradar-IP>`, where `<qradar-IP>` is the IP address for the `qradar` entry in your `siem` section of your inventory. Next you will be faced with a warning that the vertificate is unsecure since it is self-signed. Please accept this and proceed.
 
-> **Note**
->
-> In a production environment, accepting a insecure certificate would not be an option. Since the lab setup is only short lived and solely serves a demo purpose we accept the risk in this case.
-
 In the login field, provide the username **admin** and the password **Ansible1!** if not provided otherwise. Press the **Login** button.
 
 You are now viewing the IBM QRadar main web interface.
@@ -33,17 +29,10 @@ For the purpose of the demo, we will have a closer look at the **Offenses**: cli
 
 ![QRadar offense window](images/qradar-offense-window.png)
 
-> **Note**
->
-> Since this is a demo environment, it is likely that the list of offenses is currently empty.
-
 Offenses are messages or events generated based upon findings in log messages or network traffic, like a malicious log line. QRadar triggers offenses based on rules: the rules describe conditions, and when a condition is met, the offense is the result.
 
-To say it with the words of the official documentation:
 
-> *Rules, sometimes called correlation rules are applied to events, flows, or offenses to search for or detect anomalies. If all the conditions of a test are met, the rule generates response. ([QRadar documentation](https://www.ibm.com/support/knowledgecenter/en/SS42VS_7.3.2/com.ibm.qradar.doc/c_qradar_rul_mgt.html))*
-
-In a productive environment it is common to create more and more custom rules over time. But for now, let's have a look at the rules which are already installed on the system: in the **Offenses** window, on the left side in the navigation bar, click on **Rules**. A long list of rules is displayed. In the search bar on top of this list, enter the following search term: `DDoS` Hit enter afterwards to filter the list.
+Let's have a look at the rules which are already installed on the system: in the **Offenses** window, on the left side in the navigation bar, click on **Rules**. A long list of rules is displayed. In the search bar on top of this list, enter the following search term: `DDoS` Hit enter afterwards to filter the list.
 
 The list is filtered, and only shows few rules which are related to DDOS.
 
@@ -51,41 +40,13 @@ The list is filtered, and only shows few rules which are related to DDOS.
 
 Click the one called **"Potential DDoS Against Single Host (TCP)"**, note that it is enabled. This will be relevant later in this exercise.
 
-Now that you had a very first glance at QRadar, it is time to look how it can be automated by Ansible.
-
 ## Step 4.3 - QRadar modules and Ansible collections
 
-On the most basic level, Ansible automation performs tasks. Those tasks execute modules, which usually work on the corresponding targets, like an API endpoint of a special device or program.
-
-Ansible comes along with a lot of modules included. But as time of writing Ansible does not ship QRadar modules out of the box. Instead, those modules are provided as [Ansible collections](https://docs.ansible.com/ansible/devel/dev_guide/collections_tech_preview.html):
+Ansible does not ship QRadar modules out of the box. Instead, these modules are provided as **Ansible Collections**
 
 > *Collections are a distribution format for Ansible content. They can be used to package and distribute playbooks, roles, modules, and plugins. You can publish and use collections through Ansible Galaxy.*
 
-Collections follow a simple directory structure to provide Ansible content. If you feel reminded of Ansible roles here, this has a reason: Collections are built upon the idea of roles, but extend the concept to general Ansible content management. The collection for IBM QRadar can be found in the [ansible-security project](https://github.com/ansible-security/ibm_qradar).
-
-As roles, collections also need to be installed first before they can be used. They are installed on the machine executing Ansible,  in the case of the lab this is the control host.
-
-Let's install the collection for QRadar modules on your control host. In your VS Code online editor open a new terminal. Execute the command `ansible-galaxy collection --help` to verify that the collections function is working properly:
-
-```bash
-[student<X>@ansible ~]$ ansible-galaxy collection --help
-usage: ansible-galaxy collection [-h] COLLECTION_ACTION ...
-
-positional arguments:
-  COLLECTION_ACTION
-    init             Initialize new collection with the base structure of a
-                     collection.
-    build            Build an Ansible collection artifact that can be publish
-                     to Ansible Galaxy.
-    publish          Publish a collection artifact to Ansible Galaxy.
-    install          Install collection(s) from file(s), URL(s) or Ansible
-                     Galaxy
-
-optional arguments:
-  -h, --help         show this help message and exit
-```
-
-With that in mind, we can now install the collection `ibm.qradar`:
+As roles, collections also need to be installed first before they can be used. In your VS Code online editor open a new terminal. Execute the command `ansible-galaxy collection --help` if you want to explore this command further.  Howeve for now we can now install the collection `ibm.qradar`:
 
 ```bash
 [student<X>@ansible ~]$ ansible-galaxy collection install ibm.qradar
@@ -106,12 +67,7 @@ tests
 ```
 
 All required files are there - especially the directory `plugins/modules` which contains the actual modules.
-
-With the collection in place, we can now start to write our playbook.
-
-> **Note**
->
-> If you want to try this at home: please note that this collection command requires at least Ansible version 2.9!
+ 
 
 ## Step 4.4 - First example playbook
 
@@ -194,43 +150,6 @@ Both tasks only collect and output data, they do not change anything. Let's quic
 
 ```bash
 [student<X>@ansible ansible-files]$ ansible-playbook find_qradar_rule.yml
-
-PLAY [Find QRadar rule state] ***************************************************
-
-TASK [Gathering Facts] ************************************************************
-ok: [qradar]
-
-TASK [get info about qradar rule] *************************************************
-ok: [qradar]
-
-TASK [output returned rule_info] **************************************************
-ok: [qradar] => {
-    "rule_info": {
-        "changed": false,
-        "failed": false,
-        "rules": [
-            {
-                "average_capacity": 0,
-                "base_capacity": 0,
-                "base_host_id": 0,
-                "capacity_timestamp": 0,
-                "creation_date": 1278524200032,
-                "enabled": true,
-                "id": 100065,
-                "identifier": "SYSTEM-1520",
-                "linked_rule_identifier": null,
-                "modification_date": 1566928030130,
-                "name": "Potential DDoS Against Single Host (TCP)",
-                "origin": "SYSTEM",
-                "owner": "admin",
-                "type": "FLOW"
-            }
-        ]
-    }
-}
-
-PLAY RECAP ************************************************************************
-qradar  : ok=3  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0
 ```
 
 As you see, the debug task `output returned rule_info` shows the content of the variable, and thus the content which was returned by the module `qradar_rule_info`. Note among those return data the key `id`, in this example with the value `100065`. This is the key we need.
@@ -274,20 +193,6 @@ After we completed the playbook, let's execute it:
 
 ```bash
 [student<X>@ansible ansible-files]$ ansible-playbook change_qradar_rule.yml
-
-PLAY [Change QRadar rule state] ***************************************************
-
-TASK [Gathering Facts] ************************************************************
-ok: [qradar]
-
-TASK [get info about qradar rule] *************************************************
-ok: [qradar]
-
-TASK [disable rule by id] *********************************************************
-changed: [qradar]
-
-PLAY RECAP ************************************************************************
-qradar  : ok=3  changed=1  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0
 ```
 
 As you can see, the playbook denotes a change: the rule was changed. Run the playbook again - it does not report a change anymore, since the rule is now already disabled.
