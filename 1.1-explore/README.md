@@ -116,5 +116,9 @@ Ansible is already configured to use the inventory specific to your environment.
 You might have guessed by now this lab is pretty commandline-centric…​ So we recommend that you don’t type everything manually, use copy & paste from the browser when appropriate. But stop to think and understand.
 
 ----
+**Navigation**
+<br>
+[Next Exercise](../1.2-checkpoint)
+
 
 [Click Here to return to the Ansible Security Automation Workshop](../README.md#section-1---introduction-to-ansible-security-automation-basics)
