@@ -302,5 +302,8 @@ Hit enter to filter the list, so that it only shows rules which are related to D
 You are done with the first steps of automating QRadar with Ansible. Head back to the exercise overview and continue with the next exercise.
 
 ----
+**Navigation**
+<br>
+[Previous Exercise](../1.3-snort) - [Next Exercise](../2.1-enrich)
 
 [Click Here to return to the Ansible Security Automation Workshop](../README.md#section-1---introduction-to-ansible-security-automation-basics)
