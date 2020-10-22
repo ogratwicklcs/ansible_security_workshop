@@ -254,5 +254,8 @@ As a result, in the left corner, a small window pops up informing you of the pro
 As you can see, even making a small change in the configuration requires multiple clicks from the user - the more of these steps can be automated, the better.
 
 ----
+**Navigation**
+<br>
+[Previous Exercise](../1.1-explore) - [Next Exercise](../1.3-snort)
 
 [Click Here to return to the Ansible Security Automation Workshop](../README.md#section-1---introduction-to-ansible-security-automation-basics)
