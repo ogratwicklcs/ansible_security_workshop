@@ -3,7 +3,7 @@
 
 ## Step 2.1 - Check Point Next Generation Firewall
 
-To showcase how to automate the firewall in a security environment, this lab contains a Check Point Next Generaion Firewall (NGFW).
+To showcase how to automate the firewall in a security environment, this lab contains a Check Point Next Generation Firewall (NGFW).
 
 The NGFW is usually not managed directly, but via a central security management server (MGMT). The MGMT is a central tool to manage multiple NGFWs or other security tools in one spot.
 
@@ -12,17 +12,15 @@ There are multiple ways to interact with the MGMT. In our lab, two ways are impo
 - API: Ansible mostly works with the API
 - Windows client: the user interaction takes place in a Windows client.
 
-In this lab the playbooks we write will be interacting with the API in the background. All actions will be verified in the Windows client UI.
+In this lab, the playbooks we write, will be interacting with the API in the background. All actions will be verified in the Windows client UI.
 
 ## Step 2.2 - Accessing the Check Point MGMT server via a Windows workstation
-
-Since access to the MGMT server requires a Windows client and we cannot be sure that each and every lab student has access to a Windows environment, we have provisioned a Windows workstation as part of this lab.
 
 The Windows workstation can be reached via Remote Desktop Protocol (RDP). We recommend to use a native RDP client if available. If not, the Workstation is equipped with an HTML RDP client which enables lab participants to access the workstation via browser.
 
 Test the access to the MGMT server now by pointing your RDP client to the `windows-ws` IP in your inventory.
 
-If you do not have a RDP client available or want to test the HTML RDP client, please open the following URL in your browser: `http://<windows-wsIP>/myrtille`. Be sure to replace `<windows-wsIP>` with the IP for the Windows workstation from your inventory. In the login field, only provide the user name and the password: The user name is **Administrator**, the password is provided in the inventory. Leave the other fields empty, and click on **Connect**.
+If you do not have a RDP client available or want to test the HTML RDP client, please open the following URL in your browser: `http://<windows-IP>/myrtille`. Be sure to replace `<windows-IP>` with the IP for the Windows workstation from your inventory. In the login field, only provide the user name and the password: The username is **Administrator**, the password is provided in the inventory. Leave the other fields empty, and click on **Connect**.
 
 You now are accessing a default windows workstation with a Google Chrome browser installed.
 
@@ -38,10 +36,6 @@ Launch the Check Point SmartConsole via the desktop icon. In the following windo
 
 Press the **Login** button. Afterwards you need to verify the server fingerprint by clicking the **PROCEED** button.
 
-> **Note**
->
-> In a production environment, you would first figure out the fingerprint of the server and would only proceed after you confirmed that the fiungerprint shown is identical with the one from the server. In our demo setup with the short lived instances we can assume that the fingerprints are good.
-
 You are now viewing the Check Point SmartConsole management interface. There might be a Internet Explorer Warning visible upon start. This can safely be closed and is due to limitations in the way IE works.
 
 ![SmartConsole main window](images/smartconsole-main-window.png)
@@ -56,42 +50,10 @@ A playbook is a repeatable set of *plays* and *tasks*.
 
 A playbook can have multiple plays and a play can have one or multiple tasks. A task is comprised of one or more *modules*,  modules are the components that do the actual work.
 
-The goal of a *play* is to map a group of hosts.  The goal of a *task* is to implement modules against those hosts.
-
-If you are not very familiar with Ansible, see the following example of a playbook:
-
-```yaml
----
-- name: install and start apache
-  hosts: web
-  become: yes
-  vars:
-    http_port: 80
-
-  tasks:
-    - name: httpd package is present
-      yum:
-        name: httpd
-        state: latest
-
-    - name: latest index.html file is present
-      template:
-        src: files/index.html
-        dest: /var/www/html/
-
-    - name: httpd is started
-      service:
-        name: httpd
-        state: started
-```
-
-> **Tip**
->
-> Here is a nice analogy: When Ansible modules are the tools in your workshop, the inventory is the materials and the playbooks are the instructions.
 
 We will now write a playbook to change the configuration of the Check Point setup. We will start with a simple example where we will add a whiltelist entry in the firewall configuration to allow traffic from a certain machine to another. In our example we will allow the machine called **attacker** to send traffic to our machine **snort**.
 
-The playbook will be written and run on the Ansible control host. The language the playbook is written in is [YAML](https://en.wikipedia.org/wiki/YAML). In your browser, access the VS Code online editor. In the menu bar, click on **File** -> **New File**. A new, empty file opens. Before we continue, let's save it. Again in the menu bar, click on **File** -> **Save As...**. The drop down menu opens suggesting the filename **Untitled-1** in the directory **lab_inventory**. Change this to `whitelist_attacker.yml` and remove the directory **lab_inventory** so that the full filename is: `/home/student<X>/whitelist_attacker.yml` where `<X>` is the student id assigned to you.
+In your browser, access the VS Code online editor. In the menu bar, click on **File** -> **New File**. A new, empty file opens. Before we continue, let's save it. Again in the menu bar, click on **File** -> **Save As...**. The drop down menu opens suggesting the filename **Untitled-1** in the directory **lab_inventory**. Change this to `whitelist_attacker.yml` and remove the directory **lab_inventory** so that the full filename is: `/home/student<X>/whitelist_attacker.yml` where `<X>` is the student id assigned to you.
 
 > **Note**
 >
@@ -107,13 +69,9 @@ once we have saved the file in the proper place, we can add our playbook code. F
 
 In case you wonder: the three dashes at the top, `---`, indicate the start of a YAML file.
 
-> **Note**
->
-> It is a good practice to make playbooks more reusable by pointing them at `hosts: all` and limit the execution later on the command line or via Tower. But for now we simplify the process by naming hosts in the playbook directly.
-
 As mentioned, in this a simple example we will add a whitelist entry. A simple whitelist entry consists of a source IP address, a destination IP address and the rule to allow access between those.
 
-For this, we add the source and destination IPs as variables to the playbook. Since Ansible knows all the machines from the inventory and since the IPs are listed in the inventory, we can just reference those information as [variables](https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html) of the corresponding hosts:
+For this, we add the source and destination IPs as variables to the playbook. Since Ansible knows all the machines from the inventory and since the IPs are listed in the inventory, we can just reference that information as variables of the corresponding hosts:
 
 <!-- {% raw %} -->
 ```yaml
@@ -159,7 +117,7 @@ Let's start with a task to define the source object:
 ```
 <!-- {% endraw %} -->
 
-As you can see, the task itself has a name - just like the play itself - and references a module, here `checkpoint_host`. The module is the part of Ansible which "makes it so" - the module in this case creates or modifies host object entries in Check Point. The module has parameters, here `name` and `ip_address`. Each module has individual parameters, often some of them are required while others are optional. To get more information about a module, you can open a terminal in your VS Code online editor and call the help. For example, in the menu bar, click on **Terminal** > **New Terminal** and execute the following command. It will show the help for the module `checkpoint_host`:
+As you can see, the task itself has a name - just like the play itself - and references a module, here `checkpoint_host`. The module in this case creates or modifies host object entries in Check Point. The module has parameters, here `name` and `ip_address`. Each module has individual parameters, often some of them are required while others are optional. To get more information about a module, you can open a terminal in your VS Code online editor and call the help. For example, in the menu bar, click on **Terminal** > **New Terminal** and execute the following command. It will show the help for the module `checkpoint_host`:
 
 ```bash
 [student<X>@ansible ~]$ ansible-doc checkpoint_host
