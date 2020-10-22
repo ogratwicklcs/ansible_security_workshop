@@ -175,5 +175,7 @@ Last but not least we have to stop the attack simulation. Log out of Tower, and 
 You are done with the exercise. Turn back to the list of exercises to continue with the next one.
 
 ----
-
+**Navigation**
+<br>
+[Previous Exercise](../2.1-enrich) - [Next Exercise](../2.3-incident)
 [Click Here to return to the Ansible Security Automation Workshop](../README.md#section-2---ansible-security-automation-use-cases)
