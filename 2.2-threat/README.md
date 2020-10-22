@@ -178,4 +178,5 @@ You are done with the exercise. Turn back to the list of exercises to continue w
 **Navigation**
 <br>
 [Previous Exercise](../2.1-enrich) - [Next Exercise](../2.3-incident)
+
 [Click Here to return to the Ansible Security Automation Workshop](../README.md#section-2---ansible-security-automation-use-cases)
