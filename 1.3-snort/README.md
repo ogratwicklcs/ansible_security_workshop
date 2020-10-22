@@ -316,5 +316,8 @@ The last task outputs the rule which was found by the role. As you can see, it i
 Congratulation! You have completed the first steps of automating Snort with Ansible. Head back to the exercise overview and continue with the next step.
 
 ----
+**Navigation**
+<br>
+[Previous Exercise](../1.2-checkpoint) - [Next Exercise](../1.4-qradar)
 
 [Click Here to return to the Ansible Security Automation Workshop](../README.md#section-1---introduction-to-ansible-security-automation-basics)
