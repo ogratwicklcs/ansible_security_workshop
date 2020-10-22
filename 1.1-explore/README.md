@@ -2,17 +2,13 @@
 
 ## Step 1.1 - Objective
 
-The objective of this lab is to provide you a deeper understanding and hands on experience how to automate security tools used by security operators. For that we will tackle three security use cases rather typical for the day-to-day challenges of security operatos. While all of them will interact with roughly the same toolset, each use case shows a different perspective (security analyst, firewall operator, IDS specialist) and thus a different point of view on the available tools.
+The objective of this lab is to provide you a deeper understanding and hands on experience how to automate security tools used by security operators. For that we will tackle three security use cases rather typical for the day-to-day challenges of security operators. While all of them will interact with roughly the same toolset, each use case shows a different perspective (security analyst, firewall operator, IDS specialist) and thus a different point of view on the available tools.
 
 We have set up a common set of security related tools:
 
 - a Firewall, in this case [Check Point Next Generation Firewall](https://www.checkpoint.com/products/next-generation-firewall/)
 - a Security Information and Event Management (SIEM), here [QRadar](https://www.ibm.com/security/security-intelligence/qradar)
 - a Intrusion Detection & Prevention System, here [Snort](https://www.snort.org)
-
-The exercises of the first section of this lab guide you through each individual solution mentioned above. You will learn how to access them, what they are used for and how to interact with them using Ansible.
-
-The exercises of the second section of this lab are focused on the actual security operations use cases: situations in which a certain challenge has to be met, usually by interacting not only with one of the mentioned solutions above, but with a mix of them. After setting forth the challenge and explaining what tasks need to be done manually to solve the situation, the lab walks through the steps to automate the tasks with Ansible.
 
 ## Step 1.2 - Architecture of the lab, Nodes and Services
 
@@ -31,8 +27,6 @@ In this lab you work in a pre-configured lab environment. You will have access t
 The lab is set up individually for you. You have your own environment, own services, own virtual machines.
 
 ![Red Hat Ansible Security Workshop Pod](images/diagram.png)
-
-For the exercises of section 2 we need to have security incidents. Those should happen on a **target** machine - that is Snort server. It is basically a RHEL installation with Snort installed and running a simplified web server to run attacks against.
 
 ## Step 1.3 - Access the Ansible Environment
 
@@ -73,10 +67,6 @@ Next, proceed to check that Ansible has been installed correctly.
 The result should resemble the following:
 
 ![VS Code - Check Ansible Version](images/1-vscode-check-ansible-version.png)
-
-> **Note**
-> 
-> Ansible is keeping configuration management simple. Ansible requires no database or running daemons and can run easily on a laptop. On the managed hosts it needs no running agent.
 
 ## Step 1.5 - Your inventory
 
