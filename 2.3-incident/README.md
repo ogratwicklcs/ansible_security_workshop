@@ -268,6 +268,10 @@ This is how ansible security automation can integrate three different security p
 
 Ansible Security Automation allows security organizations to create pre-approved automation workflows, called playbooks, that can be maintained centrally and shared across different teams. And with the help of Tower, we can even provide those automation workflows to other teams in a controlled, user friendly and simple to consume way.
 
+
 ----
+**Navigation**
+<br>
+[Previous Exercise](../2.2-threat) 
 
 [Click Here to return to the Ansible Security Automation Workshop](../README.md#section-2---ansible-security-automation-use-cases)
