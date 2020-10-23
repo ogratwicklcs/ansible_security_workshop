@@ -1,7 +1,5 @@
 # Exercise 2.1 - Investigation Enrichment
 
-**Read this in other languages**: ![uk](../../../images/uk.png) [English](README.md),  ![japan](../../../images/japan.png) [日本語](README.ja.md).
-
 ## Step 1.1 - The Background
 
 In the last section the focus was on single tools and how they can be automated with Ansible. In the daily operation of security practitioners the need is one step higher: when something suspicious happens and needs further attention, security operations need to deploy many tools to secure an enterprise IT. In many enterprise environments, security solutions are not integrated with each other and, in large organizations, different teams are in charge of different aspects of IT security, with no processes in common. That often leads to manual work and interaction between people of different teams which is error prone and above all, slow.
@@ -42,7 +40,6 @@ Execute the playbook:
 >
 > Basically in this playbook we register a small daemon running watch, which will execute a command every 5 seconds. This is a rather harsh way to start a repeating task, but serves the purpose of this lab.
 
-The stage is set now. Read on to learn what this use case is about.
 
 ## Step 1.3 - See the anomaly
 
@@ -64,7 +61,7 @@ You can log off from the Snort server by executing the command `exit` or pressin
 >
 > You might have guessed already: this log entry is triggered every five seconds by the daemon we started at the beginning of this exercise.
 
-As a security analyst you know that anomalies can be the sign of a breach or other serious causes. You decide to investigate. Right now, you do not have enough information about the anomaly to dismiss it as a false positive. So you need to collect more data points - like from the firewall and the IDS. Going through the logs of the firewall and IDS manually takes a lot of time. In large organizations, the security analyst might not even have the necessary access rights and needs to contact the teams  responsible for both the enterprise firewall and the IDS, asking them to manually go through the respective logs and directly check for anomalies on their own and then reply with the results. This operation could take hours or even days.
+As a security analyst you know that anomalies can be the sign of a breach or other serious causes. You decide to investigate. Right now, you do not have enough information about the anomaly to dismiss it as a false positive. So you need to collect more data points - like from the firewall and the IDS.
 
 ## Step 1.4 - Write playbook to create new log sources
 
