@@ -40,46 +40,13 @@ Execute the playbook:
 >
 > Basically in this playbook we register a small daemon running watch, which will execute a command every 5 seconds. This is a rather harsh way to start a repeating task, but serves the purpose of this lab.
 
-
-## Step 1.3 - See the anomaly
-
-Imagine you are a security analyst in an enterprise. You were just informed of an anomaly in an application. From within a terminal in your VS Code online editor, ssh to the snort machine. Remember that you can look up the IP of the Snort server from the inventory file at `/home/student<X>/lab_inventory/hosts`.
-
-Open a new terminal in your VS Code online editor to connect to the Snort server via SSH. Note: As the login user for the Snort server, you need to use `ec2-user`! After login, grep for the anomaly log entry:
-
-```bash
-[student<X>@ansible ~]$ ssh ec2-user@11.22.33.44
-Last login: Sun Sep 22 15:38:36 2019 from 35.175.178.231
-[ec2-user@ip-172-16-115-120 ~]$ sudo grep web_attack /var/log/httpd/access_log
-172.17.78.163 - - [22/Sep/2019:15:56:49 +0000] "GET /web_attack_simulation HTTP/1.1" 200 22 "-" "curl/7.29.0"
-...
-```
-
-You can log off from the Snort server by executing the command `exit` or pressing `CTRL` and `D`.
-
-> **Note**
->
-> You might have guessed already: this log entry is triggered every five seconds by the daemon we started at the beginning of this exercise.
-
-As a security analyst you know that anomalies can be the sign of a breach or other serious causes. You decide to investigate. Right now, you do not have enough information about the anomaly to dismiss it as a false positive. So you need to collect more data points - like from the firewall and the IDS.
-
-## Step 1.4 - Write playbook to create new log sources
+## Step 1.3 - Write playbook to create new log sources
 
 If you use a SIEM, things are better: you can collect and analyze logs centrally. In our case the SIEM is QRadar. QRadar has the ability to collect logs from other systems and search them for suspicious activities. So how do we analyze logs in QRadar? Before we can look at these logs we need to stream them into QRadar. This happens in two steps: first we need to configure the sources - here Check Point and Snort - to forward their logs to QRadar. And second we have to add those systems as log sources to QRadar.
 
-Doing this manually requires a lot of work on multiple machines, which again takes time and might require privileges a security analyst does not have. But Ansible allows security organizations to create pre-approved automation workflows in the form of playbooks. Those can even be maintained centrally and shared across different teams to enable security workflows at the press of a button. With these Playbooks, we as the security analyst can automatically configure both the enterprise firewall and the IDS to send their events/logs to the QRadar instance, so that we can correlate the data and decide how to proceed with the suspect application.
-
-> **Note**
->
-> Why don't we add those logs to QRadar permanently? The reason is that many log systems are licensed/paid by the amount of logs they consume, making it expansive pushing non-necessary logs in there. Also, if too many logs are in there it becomes harder to analyse the data properly and in a timely manner.
+Doing this manually requires a lot of work on multiple machines, which again takes time and might require privileges a security analyst does not have. But Ansible allows security organizations to create pre-approved automation workflows in the form of playbooks. 
 
 So let's write such a playbook which first configures the log sources - Snort and Check Point - to send the logs to QRadar, and afterwards add those log sources to QRadar so that it is aware of them.
-
-As usual, the playbook needs a name and the hosts it should be executed on. Since we are working on different machines in this workflow, we will separate the playbook into different "[plays](https://docs.ansible.com/ansible/latest/user_guide/playbooks_intro.html#playbook-language-example)":
-
-> *The goal of a play is to map a group of hosts to some well defined roles, represented by things ansible calls tasks. At a basic level, a task is nothing more than a call to an ansible module.*
-
-This means that the "host" section will appear multiple times in one playbook, and each section has a dedicated task list.
 
 Let's start with the Snort configuration. We need Snort's log server to send the logs to the QRadar server. This can be configured with an already existing role, [ids_config](https://github.com/ansible-security/ids_config), so all we have to do is to import the role and use it with the right parameters.
 
@@ -277,7 +244,7 @@ If you bring all these pieces together, the full playbook `enrich_log_sources.ym
 >
 > Remember to replace the value `YOURSERVERNAME` with your actual server name as mentioned further above.
 
-## Step 1.5 - Run playbooks to enable log forwarding
+## Step 1.4 - Run playbooks to enable log forwarding
 
 Run the full playbook to add both log sources to QRadar:
 
@@ -287,7 +254,7 @@ Run the full playbook to add both log sources to QRadar:
 
 In Check Point SmartConsole you might even see a little window pop up in the bottom left corner informing you about the progress. If that gets stuck at 10% you can usually safely ignore it, the log exporter works anyway.
 
-## Step 1.6 - Verify the log source configuration
+## Step 1.5 - Verify the log source configuration
 
 Before that Ansible playbook was invoked, QRadar wasn’t receiving any data from Snort or Check Point. Immediately after, without any further intervention by us as security analyst, Check Point logs start to appear in the QRadar log overview.
 
@@ -307,45 +274,13 @@ Let's verify that QRadar also properly shows the log source. In the QRadar UI, c
 
 ![QRadar Log Sources](images/qradar_log_sources.png)
 
-In Check Point the easiest way to verify that the log source is set is indeed via command line. From the terminal of your VS Code online editor, use SSH to log into the Check Point management server IP with the user admin and issue the following `ls` comand:
-
-```bash
-[student<X>@ansible ~]$ ssh admin@11.33.44.55
-[Expert@gw-77f3f6:0]# ls -l /opt/CPrt-R80/log_exporter/targets
-total 0
-drwxr-xr-x 6 admin root 168 Sep 16 11:23 syslog-22.33.44.55
-```
-
-As you can see the central log server was configured via Check Point's internal log exporter tool. Leave the Check Point server and go back to your control host.
-
-Let's also verify that the Snort configuration in the background was successful. From the terminal of your VS Code online editor, log onto your Snort instance via SSH as the user `ec2-user`. Become root and verify the rsyslog forwarding configuration:
-
-```bash
-[student<X>@ansible ~]$ ssh ec2-user@22.33.44.55
-Last login: Wed Sep 11 15:45:00 2019 from 11.22.33.44
-[ec2-user@ip-172-16-11-222 ~]$ sudo -i
-[root@ip-172-16-11-222 ~]# cat /etc/rsyslog.d/ids_confg_snort_rsyslog.conf
-$ModLoad imfile
-$InputFileName /var/log/snort/merged.log
-$InputFileTag ids-config-snort-alert
-$InputFileStateFile stat-ids-config-snort-alert
-$InputFileSeverity alert
-$InputFileFacility local3
-$InputRunFileMonitor
-local3.* @44.55.66.77:514
-```
-
-Leave the Snort server again and come back to your control host.
-
 Note that so far no logs are sent from Snort to QRadar: Snort does not know yet that this traffic is noteworthy!
 
-But as a security analyst, with more data at our disposal, we finally have a better idea of what could be the cause of the anomaly in the application behaviour. We see the logs from the firewall, see who is send traffic to whom, but still not enough data to dismiss the event as a false positive.
+But as a security analyst, with more data at our disposal, we finally have a better idea of what could be the cause of the anomaly in the application behaviour. We see the logs from the firewall, see who is sending the traffic, but still not enough data to dismiss the event as a false positive.
 
-## Step 1.7 - Add Snort signature
+## Step 1.6 - Add Snort signature
 
-To decide if this anomaly is a false positive, as a security analyst you need to exclude any potential attack. Given the data at your disposal you decide to implement a new signature on the IDS to get alert logs if such traffic is detected again.
-
-In a typical situation, implementing a new rule would require another interaction with the security operators in charge of Snort. But luckily we can again use an Ansible Playbook to achieve the same goal in seconds rather than hours or days.
+To decide if this anomaly is a false positive, a security analyst needs to exclude any potential attack. Given the data at your disposal you decide to implement a new signature on the IDS to get alert logs if such traffic is detected again.
 
 In the previous Snort exercise we already added a Snort rule with a signature to get more information, so we can reuse the playbook and only change the rule data. In your VS Code online editor, create a file called `enrich_snort_rule.yml` in your users' home directory with the following content:
 
@@ -392,7 +327,7 @@ Last login: Fri Sep 20 15:09:40 2019 from 54.85.79.232
 alert tcp any any -> any any  (msg:"Attempted Web Attack"; uricontent:"/web_attack_simulation"; classtype:web-application-attack; sid:99000020; priority:1; rev:1;)
 ```
 
-## Step 1.8 - Identify and close the Offense
+## Step 1.7 - Identify and close the Offense
 
 Moments after the playbook has been executed, we can check in QRadar if we see Offenses. And indeed, that is the case. Log into your QRadar UI, click on **Offenses**, and there on the left side on **All Offenses**:
 
@@ -400,11 +335,9 @@ Moments after the playbook has been executed, we can check in QRadar if we see O
 
 With these information at our hand, we can now finally check all offenses of this type, and verify that they are all coming only from one single host, the attacker.
 
-The next step would be to get in touch with the team responsible for that machine, and discuss the behaviour. For the purpose of the demo we assume that the team of that machine provides feedback that this behaviour is indeed wanted, and that the security alert is a false positive. Thus we can dismiss the QRadar offense.
-
 In the Offense view, click on the Offense, then in the menu on top on **Actions**, In the drop-down menu-click on **close**. A window will pop up where you can enter additional information and finally close the offense as a false positive.
 
-## Step 1.9 - Rollback
+## Step 1.8 - Rollback
 
 In the final step, we will rollback all configuration changes to their pre-investigation state, reducing resource consumption and the analysis workload for us and our fellow security analysts. Also we need to stop the attack simulation.
 
@@ -499,7 +432,7 @@ attacker | CHANGED | rc=0 >>
 ```
 <!-- {% endraw %} -->
 
-The connects to the **attacker** machine with escalated privileges (`-b`) and runs the shell module there (`-m shell`). The parameter of the shell module is a chain of shell commans. We output all running processes, remove lines where grep is part of the command itself, assuming that those are not of value to us. We then filter for all commands executing watch, use awk to get the process ID and hand the process ID over to `kill`.
+The ansible command connects to the **attacker** machine with escalated privileges (`-b`) and runs the shell module there (`-m shell`). The parameter of the shell module is a chain of shell commans. We output all running processes, remove lines where grep is part of the command itself, assuming that those are not of value to us. We then filter for all commands executing watch, use awk to get the process ID and hand the process ID over to `kill`.
 
 If you get an error saying `Share connection to ... closed.`, don't worry: just execute the command again.
 
