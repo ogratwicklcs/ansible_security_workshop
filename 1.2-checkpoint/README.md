@@ -20,7 +20,7 @@ The Windows workstation can be reached via Remote Desktop Protocol (RDP). We rec
 
 Test the access to the MGMT server now by pointing your RDP client to the IP of your `windows` node in your inventory.
 
-If you do not have a RDP client available or want to test the HTML RDP client, please open the following URL in your browser: `http://<windows-IP>/myrtille`. Be sure to replace `<windows-IP>` with the IP for the Windows workstation from your inventory. In the login field, only provide the user name and the password: The username is **Administrator**, the password is provided in the inventory. Leave the other fields empty, and click on **Connect**.
+If you do not have a RDP client available or want to test the HTML RDP client, please open the following URL in your browser: `http://<windows-IP>/myrtille`. Be sure to replace `<windows-IP>` with the IP for the Windows workstation from your inventory. In the login field, only provide the username and the password: The username is **Administrator**, the password is provided in the inventory. Leave the other fields empty, and click on **Connect**.
 
 You now are accessing a default windows workstation with a Google Chrome browser installed.
 
