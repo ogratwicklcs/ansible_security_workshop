@@ -59,7 +59,7 @@ In your browser, access the VS Code online editor. In the menu bar, click on **F
 >
 > Make sure that the file, and all future operations, are always done in the home directory, **/home/student\<X>**. This is crucial for the proper execution of the exercises.
 
-once we have saved the file in the proper place, we can add our playbook code. First, a playbook needs a name and the hosts it should be executed on. So let's add those:
+Once we have saved the file in the proper place, we can add our playbook code. First, a playbook needs a name and the hosts it should be executed on. So let's add those:
 
 ```yaml
 ---
