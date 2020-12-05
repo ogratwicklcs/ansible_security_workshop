@@ -10,7 +10,7 @@ The NGFW is usually not managed directly, but via a central security management 
 There are multiple ways to interact with the MGMT. In our lab, two ways are important:
 
 - API: Ansible mostly works with the API
-- Windows client: the user interaction takes place in a Windows client.
+- Windows client: the user interaction takes place on a Windows client.
 
 In this lab, the playbooks we write, will be interacting with the API in the background. All actions will be verified in the Windows client UI.
 
