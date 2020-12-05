@@ -152,7 +152,7 @@ Both tasks only collect and output data, they do not change anything. Let's quic
 [student<X>@ansible ansible-files]$ ansible-playbook find_qradar_rule.yml
 ```
 
-As you see, the debug task `output returned rule_info` shows the content of the variable, and thus the content which was returned by the module `qradar_rule_info`. Note among those return data the key `id`, in this example with the value `100065`. This is the key we need.
+As you see, the debug task `output returned rule_info` shows the content of the variable, and thus the content which was returned by the module `qradar_rule_info`. Note among the return data the key `id`, in this example with the value `100065`. This is the key we need.
 
 > **Note**
 >
