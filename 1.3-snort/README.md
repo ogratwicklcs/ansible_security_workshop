@@ -103,7 +103,7 @@ Next, we need to add the tasks. Since we are using a role, we can simply use a s
         ids_rule_state: present
 ```
 
-Let's have a quick look at what is happening here. the rule header is `alert tcp any any -> any any`, so we create an alert for tcp traffic from any source to any destination.
+Let's have a quick look at what is happening here, the rule header is `alert tcp any any -> any any`, so we create an alert for tcp traffic from any source to any destination.
 The rule options define the human readable Snort message if and when the rule finds a match. `uricontent` which is a specialized version of `content` making it easier to analyze URIs. The `classtype` is set to `attempted-user` which is the default class for "attempted user privilege gain". SID is set to a value high enough for user defined rules. The priority is `1` and finally since this is the first version of this rule we set the revision to `1`.
 
 The other variables, `ids_rules_file` and  `ids_rule_state` provide the user defined location for the rules file and state that the rule should be created if it does not exist already (`present`).
