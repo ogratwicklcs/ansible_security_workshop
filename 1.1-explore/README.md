@@ -56,7 +56,7 @@ A new terminal will be opened in the lower part of your editor and you will be a
 
   - `sudo` has been configured on the managed hosts to run commands that require root privileges.
 
-Note that each student is assigned a student number, i.e. X and you should work as the student <X> user on the control node if not explicitly told differently.
+Note that each student is assigned a student number, i.e. X and you should work as that student <X> user on the control node if not explicitly told differently.
 
 Next, proceed to check that Ansible has been installed correctly.
 
