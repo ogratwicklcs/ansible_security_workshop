@@ -139,9 +139,6 @@ Now edit again the existing playbook `enrich_log_sources.yml` where we already b
 
 Note that in this snippet the variable we are setting for `checkpoint_server_name` is being accessed from the previous task where we are gathering the facts from our checkpoint management instance. 
 
-![Check Point Gateway Name](images/check_point_gw_name.png)
-
-
 Now we have to tell QRadar that there is another log source, this time Check Point. Add the following play to the playbook `enrich_log_sources.yml`:
 
 <!-- {% raw %} -->
