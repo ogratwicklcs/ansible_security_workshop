@@ -137,7 +137,7 @@ Now edit again the existing playbook `enrich_log_sources.yml` where we already b
 ```
 <!-- {% endraw %} -->
 
-Note that in this snippet the variable we are setting for `checkpoint_server_name` is being accessed from the previous task where we are gathering the facts from our checkpoint management instance, like `gw-77f3f6`. You can find the name of your individual Check Point instance by logging into your SmartConsole. It is shown in the **GATEWAYS & SERVERS** tab in the lower part of the screen underneath **Summary**:
+Note that in this snippet the variable we are setting for `checkpoint_server_name` is being accessed from the previous task where we are gathering the facts from our checkpoint management instance. 
 
 ![Check Point Gateway Name](images/check_point_gw_name.png)
 
