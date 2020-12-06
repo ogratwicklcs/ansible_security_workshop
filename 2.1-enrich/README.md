@@ -123,25 +123,24 @@ Now edit again the existing playbook `enrich_log_sources.yml` where we already b
   hosts: checkpoint
 
   tasks:
+    - name: Get name of Check Point management instance
+      cp_mgmt_simple_gateway_facts:
+        details_level: full
+      register: gw_name
     - include_role:
         name: ansible_security.log_manager
         tasks_from: forward_logs_to_syslog
       vars:
         syslog_server: "{{ hostvars['qradar']['private_ip'] }}"
-        checkpoint_server_name: "YOURSERVERNAME"
+        checkpoint_server_name: "{{ gw_name.ansible_facts['simple-gateways']['objects'][0]['send-alerts-to-server'][0] }}"
         firewall_provider: checkpoint
 ```
 <!-- {% endraw %} -->
 
-Note that in this snippet you have to replace `YOURSERVERNAME` with the actual server name from your Check Point management instance, like `gw-77f3f6`. You can find the name of your individual Check Point instance by logging into your SmartConsole. It is shown in the **GATEWAYS & SERVERS** tab in the lower part of the screen underneath **Summary**:
+Note that in this snippet the variable we are setting for `checkpoint_server_name` is being accessed from the previous task where we are gathering the facts from our checkpoint management instance, like `gw-77f3f6`. You can find the name of your individual Check Point instance by logging into your SmartConsole. It is shown in the **GATEWAYS & SERVERS** tab in the lower part of the screen underneath **Summary**:
 
 ![Check Point Gateway Name](images/check_point_gw_name.png)
 
-Replace the string `YOURSERVERNAME` in the playbook with your indididual name.
-
-> **Note**
->
-> This could also be done automatically with two API calls, but it would complicate the playbook listing here.
 
 Now we have to tell QRadar that there is another log source, this time Check Point. Add the following play to the playbook `enrich_log_sources.yml`:
 
@@ -207,14 +206,17 @@ If you bring all these pieces together, the full playbook `enrich_log_sources.ym
 
 - name: Configure Check Point to send logs to QRadar
   hosts: checkpoint
-
   tasks:
+    - name: Get name of Check Point management instance
+      cp_mgmt_simple_gateway_facts:
+        details_level: full
+      register: gw_name
     - include_role:
         name: ansible_security.log_manager
         tasks_from: forward_logs_to_syslog
       vars:
         syslog_server: "{{ hostvars['qradar']['private_ip'] }}"
-        checkpoint_server_name: "YOURSERVERNAME"
+        checkpoint_server_name: "{{ gw_name.ansible_facts['simple-gateways']['objects'][0]['send-alerts-to-server'][0] }}"
         firewall_provider: checkpoint
 
 - name: Add Check Point log source to QRadar
@@ -238,9 +240,6 @@ If you bring all these pieces together, the full playbook `enrich_log_sources.ym
 ```
 <!-- {% endraw %} -->
 
-> **Note**
->
-> Remember to replace the value `YOURSERVERNAME` with your actual server name as mentioned further above.
 
 ## Step 1.4 - Run playbooks to enable log forwarding
 
@@ -249,8 +248,6 @@ Run the full playbook to add both log sources to QRadar:
 ```bash
 [student<X>@ansible ~]$ ansible-playbook enrich_log_sources.yml
 ```
-
-In Check Point SmartConsole you might even see a little window pop up in the bottom left corner informing you about the progress. If that gets stuck at 10% you can usually safely ignore it, the log exporter works anyway.
 
 ## Step 1.5 - Verify the log source configuration
 
@@ -264,13 +261,7 @@ Many of those logs are in fact internal QRadar logs. To get a better overview, c
 
 ![QRadar Log Activity showing logs from Snort and Check Point](images/qradar_filter_logs.png)
 
-Now the list of logs is better to analyze. Verify that events are making it to QRadar from Check Point. Sometimes QRadar needs a few seconds to fully apply the new log sources. Until the new log sources are fully configured, incoming logs will have a "default" log source for unknown logs, called **SIM GENERIC LOG DSM-7**. If you see logs from this default log source, wait a minute or two. After that waiting time, the new log source configuration is properly applied and QRadar will attribute the logs to the right log source, here Check Point.
-
-Also, if you change the **View** from **Real Time** to for example **Last 5 Minutes** you can even click on individual events to see more details of the data the firewall sends you.
-
-Let's verify that QRadar also properly shows the log source. In the QRadar UI, click on the "hamburger button" (three horizontal bars) in the left upper corner, and click on **Admin** down at the bottom. In there, click on **Log Sources**. A new window opens and shows the new log sources.
-
-![QRadar Log Sources](images/qradar_log_sources.png)
+Now the list of logs is better to analyze. Verify that events are making it to QRadar from Check Point. Sometimes QRadar needs a few seconds to fully apply the new log sources. Until the new log sources are fully configured, incoming logs will have a "default" log source for unknown logs, called **SIM GENERIC LOG DSM-7**. 
 
 Note that so far no logs are sent from Snort to QRadar: Snort does not know yet that this traffic is noteworthy!
 
@@ -314,15 +305,6 @@ Now execute the playbook:
 
 ```bash
 [student<X>@ansible ~]$ ansible-playbook enrich_snort_rule.yml
-```
-
-Let's quickly verify that the new rule was indeed added. From the terminal of your VS Code online editor, ssh to the Snort server as `ec2-user` and have a look into the directory of custom rules:
-
-```bash
-[student<X>@ansible ~]$ ssh ec2-user@11.22.33.44
-Last login: Fri Sep 20 15:09:40 2019 from 54.85.79.232
-[ec2-user@snort ~]$ sudo grep web_attack /etc/snort/rules/local.rules
-alert tcp any any -> any any  (msg:"Attempted Web Attack"; uricontent:"/web_attack_simulation"; classtype:web-application-attack; sid:99000020; priority:1; rev:1;)
 ```
 
 ## Step 1.7 - Identify and close the Offense
@@ -380,12 +362,16 @@ The playbook `rollback.yml` should have this content:
   hosts: checkpoint
 
   tasks:
+    - name: Get name of Check Point management instance
+      cp_mgmt_simple_gateway_facts:
+        details_level: full
+      register: gw_name
     - include_role:
         name: ansible_security.log_manager
-        tasks_from: unforward_logs_to_syslog
+        tasks_from: forward_logs_to_syslog
       vars:
         syslog_server: "{{ hostvars['qradar']['private_ip'] }}"
-        checkpoint_server_name: "YOURSERVERNAME"
+        checkpoint_server_name: "{{ gw_name.ansible_facts['simple-gateways']['objects'][0]['send-alerts-to-server'][0] }}"
         firewall_provider: checkpoint
 
 - name: Remove Check Point log source from QRadar
@@ -408,12 +394,6 @@ The playbook `rollback.yml` should have this content:
       failed_when: false
 ```
 <!-- {% endraw %} -->
-
-> **Note**
->
-> Again, remember to replace the value of `YOURSERVERNAME` with the actual server name of your Check Point instance.
-
-While this playbook is maybe the longest you see in these entire exercises, the structure and content should already be familiar to you. Take a second to go through each task to understand what is happening.
 
 Run the playbook to remove the log sources:
 
