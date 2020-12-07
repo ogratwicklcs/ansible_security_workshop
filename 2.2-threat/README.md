@@ -71,7 +71,7 @@ Let's add a new IDS rule. Again we will do this via a pre-approved playbook alre
 
 ![Ansible Tower survey](images/tower_snort_survey.png)
 
-The playbook cannot run without further content - we have to provide the actual rule which needs to be deployed! Of course, with Snort, the rule necessary to be added depends on the actual use case and thus might be different each time. Thus this job template has a ***survey*** enabled, a method in Ansible Tower to query input before execution.
+The playbook cannot run without further content - we have to provide the actual rule which needs to be deployed! This job template has a ***survey*** feature enabled, a method in Ansible Tower to prompt for input before playbook execution.
 
 In this case we query the proper signature, the right Snort rule for this specific attack. Enter the following string into the field:
 
@@ -83,19 +83,7 @@ As you can see we add a new snort rule matching on the parameters of the attack.
 
 The playbook runs through, takes care of installing the new rule, restarting the service and so on.
 
-Quickly verify the new rule on the Snort instance. From a terminal of your VS Code online editor, log in to Snort via SSH with the user `ec2user`:
-
-```bash
-[student<X>@ansible ~]$ ssh ec2-user@11.22.33.44
-Last login: Fri Sep 20 15:09:40 2019 from 54.85.79.232
-[ec2-user@snort ~]$ sudo grep ddos_simulation /etc/snort/rules/local.rules
-alert tcp any any -> any any  (msg:"Attempted DDoS Attack"; uricontent:"/ddos_simulation"; classtype:successful-dos; sid:99000010; priority:1; rev:1;)
-```
-
-
-After you have verified the rule, leave the Snort server via the command `exit`.
-
-Next we also want the IDPS to send logs to QRadar in case the rule has a hit. We could just execute a corresponding job template as the user `opsids`. But this time we want to take a different path: instead of the IDPS operator executing the prepared playbook, we want to show how Ansible Tower can delegate such execution rights to others without letting them take control of the domain.
+Next we also want the IDPS to send logs to QRadar in case the rule has a hit. 
 
 In the **Templates** section there are multiple playbooks for a security analyst:
 
@@ -104,7 +92,7 @@ In the **Templates** section there are multiple playbooks for a security analyst
 - **Roll back all changes**
 - **Send IDPS logs to QRadar**
 
-Execute now both job templates **Accept IDPS logs in QRadar** and **Send IDPS logs to QRadar** by pressing the little rocket icon next to the job templates.
+Execute now both job templates **Accept IDPS logs in QRadar** and **Send IDPS logs to QRadar** by pressing the little `rocket` icon in no particular order.
 
 ## Step 2.8 - Whitelist IP
 
@@ -124,7 +112,7 @@ The analysts have ended their threat hunting. To reduce resource consumption and
 
 - **Roll back all changes**
 
-Log into Ansible Tower and execute it by clicking on the little rocket icon next to it. Soon all logging configuration is set back to normal.
+Log into Ansible Tower and execute it by clicking on the little `rocket` icon next to it. Soon all logging configuration is set back to normal.
 
 Last but not least we have to stop the attack simulation. In the section **Templates**, find and execute the job template called **Stop DDOS attack simulation**.
 
