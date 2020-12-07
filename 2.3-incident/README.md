@@ -76,34 +76,7 @@ Also, to let the traffic between both machines pass, two things from the first C
 
 The stage is set now. Read on to learn what this use case is about.
 
-## Step 3.3 - Identify incident
-
-As the security operator in charge of the corporate IDS, you routinely check the logs. From the terminal of your VS Code online editor, SSH to your snort node as the user `ec2-user` and view the logs:
-
-```bash
-[ec2-user@ip-172-16-11-22 ~]$ journalctl -u snort -f
--- Logs begin at Sun 2019-09-22 14:24:07 UTC. --
-Sep 22 21:03:03 ip-172-16-115-120.ec2.internal snort[22192]: [1:99000030:1] Attempted SQL Injection [Classification: Attempted Administrator Privilege Gain] [Priority: 1] {TCP} 172.17.78.163:53376 -> 172.17.23.180:80
-Sep 22 21:03:08 ip-172-16-115-120.ec2.internal snort[22192]: [1:99000030:1] Attempted SQL Injection [Classification: Attempted Administrator Privilege Gain] [Priority: 1] {TCP} 172.17.78.163:53378 -> 172.17.23.180:80
-Sep 22 21:03:13 ip-172-16-115-120.ec2.internal snort[22192]: [1:99000030:1] Attempted SQL Injection [Classification: Attempted Administrator Privilege Gain] [Priority: 1] {TCP} 172.17.78.163:53380 -> 172.17.23.180:80
-```
-
-As you see this node has just registered multiple alerts to an **Attempted Administrator Privilege Gain**. Leave the log view by pressing `CTRL-C`.
-
-If you want a closer look at the details in the snort log, check out the content of the file `/var/log/snort/merged.log` on the Snort machine:
-
-```bash
-[ec2-user@ip-172-16-180-99 ~]$ sudo tail -f /var/log/snort/merged.log
-Accept: */*
-[...]
-GET /sql_injection_simulation HTTP/1.1
-User-Agent: curl/7.29.0
-Host: 172.17.30.140
-Accept: */*
-```
-Besides some weird characters you will see the actual malformed "attack" of the user in the form of the string `sql_injection_simulation`. Leave the Snort server with the command `exit` .
-
-## Step 3.4 - Create and run a playbook to forward logs to QRadar
+## Step 3.3 - Create and run a playbook to forward logs to QRadar
 
 To better analyze this incident it is crucial to correlate the data with other sources. For this we want to feed the logs into our SIEM, QRadar.
 
@@ -157,7 +130,7 @@ This playbook should look familiar to you, it configures Snort to send logs to Q
 [student<X>@ansible ~]$ ansible-playbook incident_snort_log.yml
 ```
 
-## Step 3.5 - Verify new configuration in QRadar
+## Step 3.4 - Verify new configuration in QRadar
 
 Let's change our perspective briefly to the one of a security analyst: we mainly use the SIEM, and now logs are coming in from Snort. To verify that, access your QRadar UI, open the **Log Activity** tab and validate that events are now making it to QRadar from Snort.
 
@@ -171,7 +144,7 @@ Remember that it helps to add filters to the QRadar log view to get a better ove
 
 In the offenses tab filter the list of offenses for **Error Based SQL Injection**. Open the Offense summary to check the details of the attacker IP address previously seen in Snort logs.
 
-## Step 3.6 - Blacklist IP
+## Step 3.5 - Blacklist IP
 
 With all these information at hand, we positively identify this event as an attack. So let's stop it! We will blacklist the source IP of the attacker.
 
@@ -233,7 +206,7 @@ Also, let's quickly verify that the new rule was added to Check Point: Access th
 
 You have successfully identified an attack and blocked the traffic behind the attack!
 
-## Step 3.7 - Roll back
+## Step 3.6 - Roll back
 
 As the final step, we can run the rollback playbook to undo the Snort configuration, reducing resource consumption and the analysis workload.
 
@@ -258,7 +231,7 @@ If you get an error saying `Share connection to ... closed.`, don't worry: just 
 
 You are done with this last exercise. Congratulations!
 
-## Step 3.8 - Wrap it all up
+## Step 3.7 - Wrap it all up
 
 It happens that the job of a CISO and her team is difficult even if they have in place all necessary tools, because the tools don’t integrate with each other. When there is a security breach, an analyst has to perform a triage, chasing all relevant piece of information across the entire infrastructure, taking days to understand what’s going on and ultimately perform any sort of remediation.
 
