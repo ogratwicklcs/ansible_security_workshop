@@ -28,7 +28,7 @@ On the left side, click on **Templates**. A list of all already configured job t
 
 This click will bring you to the job overview, showing live data from the automation job execution and a summary of all the parameters which are relevant to the job. With this automation execution we have changed the existing policy in the Firewall to drop packages between the two machines.
 
-Now all we need is the attack. Unlike the last exercise we will not write and execute a playbook, but again use Tower to start the attack. In the navigation bar on the left side, click on **Templates**. In the list of templates, find and execute the one called **Start DDOS attack simulation** by clicking on the rocket icon right of it. This will ensure that every few seconds an attack is simulated.
+Now all we need is the attack. Unlike the last exercise we will not write and execute a playbook, but again use Tower to start the attack. In the navigation bar on the left side, click on **Templates**. In the list of templates, find and execute the one called **Start DDOS attack simulation** by clicking on the `rocket` icon right of it. This will ensure that every few seconds an attack is simulated.
 
 The stage is set now. Read on to learn what this use case is about.
 
