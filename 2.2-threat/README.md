@@ -22,7 +22,7 @@ Open your browser and enter the link to your Tower instance. Log-in with your st
 
 ![Tower dashboard](images/tower_dashboard.png)
 
-On the left side, click on **Templates**. A list of all already configured job templates are shown. A job template is a definition and set of parameters for running an Ansible job. It defines the inventory, credentials, playbook, limits, become rights and so on which are needed to execute the automation. In this list, find the entry called **Blacklist attacker**, and click on the rocket symbol right to it:
+On the left side, click on **Templates**. A list of all already configured job templates are shown. A job template is a definition and set of parameters for running an Ansible job. It defines the inventory, credentials, playbook, limits, become rights and so on which are needed to execute the automation. In this list, find the entry called **Blacklist attacker**, and click on the `rocket symbol` right to it:
 
 ![Blacklist attacker](images/tower_blacklist.png)
 
