@@ -50,9 +50,7 @@ Seeing these violations we should start an investigation to assess if they are t
 
 ## Step 2.5 - Forward logs to QRadar
 
-Let's try this out. Once you have logged in to Ansible Tower, you can see the dashboard, navigate to **Templates**. 
-
-Since we are the domain owners of the firewall, we can modify, delete and execute those job templates. Let's execute the template **Send firewall logs to QRadar** by clicking on the little rocket icon next to it. The execution of the job takes a few seconds. From the perspective of the firewall operator we have now reconfigured the firewall to send logs to the central SIEM.
+Since we are logged in as a `admin` user we can modify, delete and execute those job templates. Let's execute the template **Send firewall logs to QRadar** by clicking on the little rocket icon next to it. The execution of the job takes a few seconds. From the perspective of the firewall operator we have now reconfigured the firewall to send logs to the central SIEM.
 
 However, the SIEM still needs to accept logs and sort them into proper streams, called log sources in QRadar. Let's switch our perspective to the one of the security analyst. We get a call that there is something weird in the firewall and that logs are already sent into our direction. Again, check out the **Templates**: again we have a different list of automation templates at our hand. Let's accept the firewall logs into our SIEM: Execute the job template **Accept firewall logs in QRadar**.
 
