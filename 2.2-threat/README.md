@@ -50,34 +50,24 @@ Seeing these violations we should start an investigation to assess if they are t
 
 ## Step 2.5 - Forward logs to QRadar
 
-Since we are logged in as a `admin` user we can modify, delete and execute those job templates. Let's execute the template **Send firewall logs to QRadar** by clicking on the little rocket icon next to it. The execution of the job takes a few seconds. From the perspective of the firewall operator we have now reconfigured the firewall to send logs to the central SIEM.
+Since we are logged in as a `admin` user we can modify, delete and execute those job templates. Let's execute the template **Send firewall logs to QRadar** by clicking on the little `rocket` icon next to it. The execution of the job takes a few seconds. From the perspective of the firewall operator we have now reconfigured the firewall to send logs to the central SIEM.
 
 However, the SIEM still needs to accept logs and sort them into proper streams, called log sources in QRadar. Let's switch our perspective to the one of the security analyst. We get a call that there is something weird in the firewall and that logs are already sent into our direction. Again, check out the **Templates**: again we have a different list of automation templates at our hand. Let's accept the firewall logs into our SIEM: Execute the job template **Accept firewall logs in QRadar**.
 
-After a few seconds the playbook run through, and the new security configuration is done. In contrast to the previous exercise, none of these steps required the operator or the analyst to access the command line, write playbooks or even install roles or collections. The playbooks were pre-approved and in fact accessed from within a Git repository. Tower took care of the execution and the downloads of any role or collections. This substantially simplifies automation operations.
+In contrast to the previous exercise, none of these steps required the operator or the analyst to access the command line, write playbooks or even install roles or collections. The playbooks were pre-approved and in fact accessed from within a Git repository. Tower took care of the execution and the downloads of any role or collections. This substantially simplifies automation operations.
 
-If you click on **Jobs** on the right side you will also see that you can always access the previously run jobs. This enables the teams to better track what was executed when, and what where the results. This enables transparency and clear understanding of the automation that was run.
+If you click on **Jobs** on the right side you will also see that you can always access the previously run jobs. This enables the teams to better track what was executed when, and what were the results. 
 
 ## Step 2.6 - Verify new configuration
 
-Let's quickly verify that the QRadar logs are now showing up. Log into the QRadar web UI. Click on **Log Activity** and verify that events are making it to QRadar from Check Point:
-
-![QRadar Log Activity showing logs from Check Point](images/qradar_checkpoint_logs.png)
-
-> **Note**
->
-> If you do not see any logs coming in, click on the drop down menu next to **View** and select **Real Time (streaming)**.
-
-If the logs get drowned in QRadar's own logs, create a filter. Or click on unwanted log lines in the column **Log Source**, and pick **Filter on Log Source is not ...** to create filters on the fly to filter out unwanted traffic.
-
-Let's verify that QRadar also properly shows the log source. In the QRadar UI, click on the hamburger button in the left upper corner, and click on **Admin**. In there, click on **Log Souces**. A new window opens and shows the new log source.
+Let's verify that QRadar properly shows the log source. In the QRadar UI, click on the hamburger button in the left upper corner, and click on **Admin**. In there, click on **Log Souces**. A new window opens and shows the new log source.
 
 ![QRadar Log Sources](images/qradar_log_sources.png)
 
 
 ## Step 2.7 - Add Snort rule
 
-Let's add a new IDS rule. Again we will do this via a pre-approved playbook already in Tower. Log out of Tower, and log in as user `opsids` - the IDPS operator in charge of the IDPS. Navigate to **Templates**. There is a pre-created playbook available to add a rule to Snort. Execute it by clicking on the small rocket icon. But as you see, instead of bringing you to the jobs output, you will be faced with a survey:
+Let's add a new IDS rule. Again we will do this via a pre-approved playbook already in Tower. Navigate to **Templates**. There is a pre-created playbook available named **Add IDPS rule** which adds a rule to Snort. Execute it by clicking on the small `rocket` icon. But as you see, instead of bringing you to the jobs output, you will be faced with a survey:
 
 ![Ansible Tower survey](images/tower_snort_survey.png)
 
