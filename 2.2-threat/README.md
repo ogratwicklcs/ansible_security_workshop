@@ -6,7 +6,7 @@ Threat detection and response capabilities require from a security operator typi
 
 ## Step 2.2 - Preparations
 
-For this exercise to work properly, the playbook `whitelist_attacker.yml` must have been run at least once. Also in the Check Point SmartConsole management interface the logging for the attacker whitelist policy must have been activated. Both was done in the Check Point exercise in section 1. If you missed the steps, go back there, execute the playbook, follow the steps to activate the logging and come back here.
+For this exercise to work properly, the playbook `whitelist_attacker.yml` must have been run at least once. Also in the Check Point SmartConsole management interface the logging for the attacker whitelist policy must have been activated. Both was done in the Check Point exercise in section 1.2 . If you missed the steps, go back there, execute the playbook, follow the steps to activate the logging and come back here.
 
 ## Step 2.3 - Explore the Tower setup
 
