@@ -8,7 +8,7 @@ The SIEM can be accessed via web UI and via REST API. In this lab the playbooks 
 
 ## Step 4.2 - Access the web UI
 
-Have a first look at the SIEM, and verify that it is actually working. Point your web browser towards `https://<qradar-IP>`, where `<qradar-IP>` is the IP address for the `qradar` entry in your `siem` section of your inventory. Next you will be faced with a warning that the vertificate is unsecure since it is self-signed. Please accept this and proceed.
+Have a first look at the SIEM, and verify that it is actually working. Point your web browser towards `https://<qradar-IP>`, where `<qradar-IP>` is the IP address for the `qradar` entry in your `siem` section of your inventory.  The IP address should be assigned to the **ansible_host** variable. Next you will be faced with a warning that the vertificate is unsecure since it is self-signed. Please accept this and proceed.
 
 In the login field, provide the username **admin** and the password **Ansible1!** if not provided otherwise. Press the **Login** button.
 
