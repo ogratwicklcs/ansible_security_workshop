@@ -308,7 +308,7 @@ Now execute the playbook:
 
 Moments after the playbook has been executed, we can check in QRadar if we see Offenses. And indeed, that is the case. Log into your QRadar UI, click on **Offenses**, and there on the left side on **All Offenses**:
 
-![QRadar Offenses](images/qradar_offenses.png)
+![QRadar Offenses](images/qradar_offenses.PNG)
 
 With these information at our hand, we can now finally check all offenses of this type, and verify that they are all coming only from one single host, the attacker.
 
