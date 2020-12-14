@@ -96,7 +96,7 @@ Execute now both job templates **Accept IDPS logs in QRadar** and **Send IDPS lo
 
 ## Step 2.8 - Whitelist IP
 
-Let's quickly have a look at our SIEM QRadar: access the log activity tab. Validate, that in QRadar **no** events from the IDS are generated. That way you know for sure that the anomaly you see is only caused by the single IP you have in the firewall. No other traffic is causing the anomaly, you can safely assume that the anomaly you see is a false positive.
+Let's quickly have a look at our SIEM QRadar: access the log activity tab. Validate, that in QRadar no events from the IDS are generated. That way you know for sure that the anomaly you see is only caused by the single IP you have in the firewall. No other traffic is causing the anomaly, you can safely assume that the anomaly you see is a false positive.
 
 > **Note**
 >
