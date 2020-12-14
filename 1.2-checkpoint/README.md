@@ -30,7 +30,7 @@ You now are accessing a default windows workstation with a Google Chrome browser
 
 ## Step 2.3 - Access the SmartConsole UI
 
-Launch the Check Point SmartConsole via the desktop icon. In the following window, as username use `admin` and as password `admin123` if not instructed otherwise. The IP address to enter is the private_ip variable from the **checkpoint** entry of your inventory.
+Launch the Check Point SmartConsole via the desktop icon. In the following window, as username use `admin` and as password `admin123` if not instructed otherwise. The IP address to enter is the **private_ip** variable from the **checkpoint** entry of your inventory.
 
 ![SmartConsole login window](images/smartconsole-login-window.png)
 
